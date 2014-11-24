@@ -49,8 +49,12 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   end
 
   def set_deliverable_on_issue(context)
-    if context[:params] && context[:params][:issue] && context[:params][:issue][:deliverable_id].present?
-      context[:issue].deliverable = Deliverable.find_by_id_and_project_id(context[:params][:issue][:deliverable_id].to_i, context[:issue].project.id)
+    if context[:params] && context[:params][:issue]
+      if context[:params][:issue][:deliverable_id].present?
+        context[:issue].deliverable = Deliverable.find_by_id_and_project_id(context[:params][:issue][:deliverable_id].to_i, context[:issue].project.id)
+      elsif context[:params][:issue][:deliverable_id] == ''
+        context[:issue].deliverable = nil
+      end
     end
     return ''
   end
