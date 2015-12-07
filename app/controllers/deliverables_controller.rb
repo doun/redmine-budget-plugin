@@ -39,6 +39,7 @@ class DeliverablesController < ApplicationController
 
   # Saves a new Deliverable
   def create
+    params = user_params
     if params[:deliverable][:type] == FixedDeliverable.name
       @deliverable = FixedDeliverable.new(params[:deliverable])
     elsif params[:deliverable][:type] == HourlyDeliverable.name
@@ -68,6 +69,8 @@ class DeliverablesController < ApplicationController
 
   # Updates an existing Deliverable, optionally changing it's type
   def update
+    params = user_params
+
     @deliverable = Deliverable.find(params[:deliverable_id])
 
     if params[:deliverable][:type] != @deliverable.class
@@ -127,6 +130,15 @@ class DeliverablesController < ApplicationController
   end
 
   private
+
+  def user_params
+    params.permit(:deliverable_id,
+                  :deliverable => [ :subject, :description, :due,
+                                    :project_manager_signoff, :client_signoff,
+                                    :type, :cost_per_hour, :total_hours,
+                                    :overhead, :materials, :profit ])
+  end
+
   def find_project
     @project = Project.where(:identifier => params[:id]).first || Project.find(params[:id])
   end
