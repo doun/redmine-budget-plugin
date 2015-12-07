@@ -20,7 +20,7 @@ class BudgetProjectHook  < Redmine::Hook::ViewListener
 
         destination_deliverable.project = destination
         destination_deliverable.save # Need to save here because there is no relation on project to deliverable
-      end      
+      end
     end
   end
 end
