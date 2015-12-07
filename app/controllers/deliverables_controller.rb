@@ -11,15 +11,12 @@ class DeliverablesController < ApplicationController
     sort_init "#{Deliverable.table_name}.id", "desc"
     sort_update 'id' => "#{Deliverable.table_name}.id"
 
-    @deliverable_count = Deliverable.count(:conditions => { :project_id => @project.id})
+    deliverables = Deliverable.where(project_id: @project.id)
+    @deliverable_count = deliverables.count
     @deliverable_pages = Paginator.new self, @deliverable_count, per_page_option, params['page']
-    @deliverables = Deliverable.find(:all,
-                                     {
-                                       :conditions => { :project_id => @project.id},
-                                       :limit => per_page_option,
-                                       :offset => @deliverable_pages.current.offset
-                                     }.merge(sort_order)
-                                     )
+    @deliverables = deliverables.limit(per_page_option)
+                                .offset(@deliverable_pages.current.offset)
+                                .merge(sort_order)
 
     @deliverables = sort_if_needed @deliverables
 
@@ -66,7 +63,7 @@ class DeliverablesController < ApplicationController
 
   # Builds the edit form for the Deliverable
   def edit
-    @deliverable = Deliverable.find_by_id_and_project_id(params[:deliverable_id], @project.id)
+    @deliverable = Deliverable.where(id: params[:deliverable_id], project_id: @project.id).first
   end
 
   # Updates an existing Deliverable, optionally changing it's type
@@ -91,7 +88,7 @@ class DeliverablesController < ApplicationController
 
   # Removes the Deliverable
   def destroy
-    @deliverable = Deliverable.find_by_id_and_project_id(params[:deliverable_id], @project.id)
+    @deliverable = Deliverable.find(params[:deliverable_id])
 
     render_404 and return unless @deliverable
     render_403 and return unless @deliverable.editable_by?(User.current)
@@ -118,7 +115,7 @@ class DeliverablesController < ApplicationController
 
   # Assigns issues to the Deliverable based on their Version
   def bulk_assign_issues
-    @deliverable = Deliverable.find_by_id_and_project_id(params[:deliverable_id], @project.id)
+    @deliverable = Deliverable.find(params[:deliverable_id])
 
     render_404 and return unless @deliverable
     render_403 and return unless @deliverable.editable_by?(User.current)

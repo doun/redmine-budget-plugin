@@ -9,7 +9,7 @@ class Deliverable < ActiveRecord::Base
 
   # Assign all the issues with +version_id+ to this Deliverable
   def assign_issues_by_version(version_id)
-    version = Version.find_by_id(version_id)
+    version = Version.find(version_id)
     return 0 if version.nil? || version.fixed_issues.blank?
     
     version.fixed_issues.each do |issue|
@@ -177,7 +177,7 @@ class Deliverable < ActiveRecord::Base
     tracker_map = { }
     
     trackers.each do |tracker|
-      tracker_map[tracker.name] = Issue.find_all_by_tracker_id_and_project_id_and_deliverable_id(tracker.id, self.project.id, self.id).size
+      tracker_map[tracker.name] = Issue.where(tracker_id: tracker.id, project_id: self.project.id, deliverable_id: self.id).size
     end
 
     return tracker_map

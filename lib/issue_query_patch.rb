@@ -24,7 +24,7 @@ module IssueQueryPatch
       initialize_available_filters_without_deliverable
       
       if project
-        deliverable_values = Deliverable.find(:all, :conditions => ["project_id IN (?)", project], :order => 'subject ASC').collect { |d| [d.subject, d.id.to_s]}
+        deliverable_values = Deliverable.where(project_id: project).order("subject ASC").collect { |d| [d.subject, d.id.to_s]}
         add_available_filter "deliverable_id", :type => :list_optional, :values => deliverable_values
       end
     end

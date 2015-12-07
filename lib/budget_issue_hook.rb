@@ -56,7 +56,7 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
       select = select_tag('deliverable_id',
                                content_tag('option', l(:label_no_change_option), :value => '') +
                                content_tag('option', l(:label_none), :value => 'none') +
-                               options_from_collection_for_select(Deliverable.find_all_by_project_id(context[:project].id, :order => 'subject ASC'), :id, :subject))
+                               options_from_collection_for_select(Deliverable.where(project_id: context[:project].id).order('subject ASC'), :id, :subject))
 
       return content_tag(:p, content_tag(:label, l(:field_deliverable)) + select)
     else
@@ -67,7 +67,7 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   def set_deliverable_on_issue(context)
     if context[:params] && context[:params][:issue]
       if context[:params][:issue][:deliverable_id].present?
-        context[:issue].deliverable = Deliverable.find_by_id_and_project_id(context[:params][:issue][:deliverable_id].to_i, context[:issue].project.id)
+        context[:issue].deliverable = Deliverable.where(id: context[:params][:issue][:deliverable_id].to_i, project_id: context[:issue].project.id)
       elsif context[:params][:issue][:deliverable_id] == ''
         context[:issue].deliverable = nil
       end
