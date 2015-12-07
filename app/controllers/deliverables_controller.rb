@@ -125,7 +125,7 @@ class DeliverablesController < ApplicationController
 
     number_updated = @deliverable.assign_issues_by_version(params[:version][:id])
 
-    flash[:notice] = l(:message_updated_issues, number_updated)
+    flash[:notice] = l(:message_updated_issues, :number_updated => number_updated)
     redirect_to :action => 'index', :id => @project.identifier
   end
 
