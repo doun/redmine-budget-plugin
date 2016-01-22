@@ -8,6 +8,7 @@ de:
   label_materials: "Materialien: "
   field_profit: Gewinn
   field_budget: Gesamtbudget
+  field_hidden: Versteckt
   label_budget: "Gesamtbudget: "
   field_fixed_cost: Festpreis-Angebot
   field_project_manager_signoff: Projektleiter-Freigabe
@@ -48,3 +49,6 @@ de:
   label_hours_estimated: "Geschätzte Stunden: "
   label_hours_used: "Gebrauchte Stunden: "
   label_toggle_all: "Alle Deliverable-Zeilen ausklappen"
+  label_hidden: (versteckt)
+  label_show_hidden: Versteckte zeigen
+  label_hide_hidden: Versteckte ausblenden

@@ -8,6 +8,7 @@ en:
   label_materials: "Materials: "
   field_profit: Profit
   field_budget: Total Budget
+  field_hidden: Hidden
   label_budget: "Total Budget: "
   field_fixed_cost: Fixed Bid
   field_project_manager_signoff: Project Manager Signoff
@@ -48,3 +49,6 @@ en:
   label_hours_estimated: "Hours Estimated: "
   label_hours_used: "Hours Used: "
   label_toggle_all: "Expand all deliverable rows"
+  label_hidden: (hidden)
+  label_show_hidden: Show hidden
+  label_hide_hidden: Don't show hidden
