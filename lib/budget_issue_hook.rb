@@ -112,13 +112,24 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   #
   def helper_issues_show_detail_after_setting(context = { })
     # TODO Later: Overwritting the caller is bad juju
-    if context[:detail].prop_key == 'deliverable_id'
-      d = Deliverable.find_by_id(context[:detail].value)
-      context[:detail].value = d.subject unless d.nil? || d.subject.nil?
+    detail = context[:detail]
 
-      d = Deliverable.find_by_id(context[:detail].old_value)
-      context[:detail].old_value = d.subject unless d.nil? || d.subject.nil?
+    unless detail.prop_key == 'deliverable_id'
+      return
     end
-    ''
+
+    # The regex ensures that we don't try to call find with something that
+    # isn't an id. This is necessary because detail.value or detail.old_value
+    # will already be the deliverable subject sometimes.
+
+    unless detail.value.nil? or detail.value =~ /[^0-9]+/
+      d = Deliverable.find(detail.value)
+      detail.value = d.subject unless d.nil? || d.subject.nil?
+    end
+
+    unless detail.old_value.nil? or detail.old_value =~ /[^0-9]+/
+      d = Deliverable.find(detail.old_value)
+      detail.old_value = d.subject unless d.nil? || d.subject.nil?
+    end
   end
 end
