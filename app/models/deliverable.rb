@@ -1,7 +1,6 @@
 # A Deliverable is an item that is created as part of the project.  These items
 # contain a collection of issues.
 class Deliverable < ActiveRecord::Base
-  unloadable
   validates_presence_of :subject
 
   belongs_to :project

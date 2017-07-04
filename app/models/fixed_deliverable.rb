@@ -1,5 +1,4 @@
 class FixedDeliverable < Deliverable
-  unloadable
 
   # FixedDeliverables should always have a budget score of 0. This is because the budget is managed by the contractor.
   def score

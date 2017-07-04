@@ -9,7 +9,6 @@ module IssueQueryPatch
 
     # Same as typing in the class
     base.class_eval do
-      unloadable # Send unloadable so it will not be unloaded in development
       base.add_available_column(QueryColumn.new(:deliverable_subject, :sortable => "#{Deliverable.table_name}.subject"))
 
       alias_method_chain :initialize_available_filters, :deliverable

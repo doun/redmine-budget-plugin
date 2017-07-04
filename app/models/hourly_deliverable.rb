@@ -1,5 +1,4 @@
 class HourlyDeliverable < Deliverable
-  unloadable
 
   # Amount of money spent on the issues.  Determined by the Member's rate and
   # timelogs.
