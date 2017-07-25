@@ -8,7 +8,7 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   # * :issue => Issue being rendered
   #
   def view_issues_show_details_bottom(context = { })
-    if context[:project].module_enabled?('budget_module')
+    if context[:project] and context[:project].module_enabled?('budget_module')
       data = "<td><b>Deliverable :</b></td><td>#{html_escape context[:issue].deliverable.subject unless context[:issue].deliverable.nil?}</td>"
       return "<tr>#{data}<td></td></tr>"
     else
@@ -23,7 +23,7 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   # * :project => Current project
   #
   def view_issues_form_details_bottom(context = { })
-    unless context[:project].module_enabled?("budget_module")
+    unless context[:project] and context[:project].module_enabled?("budget_module")
       return ""
     end
 
@@ -52,7 +52,7 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   # * :project => Current project
   #
   def view_issues_bulk_edit_details_bottom(context = { })
-    if context[:project].module_enabled?('budget_module')
+    if context[:project] and context[:project].module_enabled?('budget_module')
       select = select_tag('deliverable_id',
                                content_tag('option', l(:label_no_change_option), :value => '') +
                                content_tag('option', l(:label_none), :value => 'none') +
