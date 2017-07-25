@@ -52,13 +52,18 @@ class BudgetIssueHook  < Redmine::Hook::ViewListener
   # * :project => Current project
   #
   def view_issues_bulk_edit_details_bottom(context = { })
-    if context[:project] and context[:project].module_enabled?('budget_module')
-      select = select_tag('deliverable_id',
-                               content_tag('option', l(:label_no_change_option), :value => '') +
-                               content_tag('option', l(:label_none), :value => 'none') +
-                               options_from_collection_for_select(Deliverable.where(project_id: context[:project].id).order('subject ASC'), :id, :subject))
+    project = context[:project] || \
+              context[:hook_caller].instance_eval { @target_project }
 
-      return content_tag(:p, content_tag(:label, l(:field_deliverable)) + select)
+    if project and project.module_enabled?('budget_module')
+      deliverables = Deliverable.where(project_id: project.id).order('subject ASC')
+
+      select = select_tag('deliverable_id',
+                               content_tag('option', t(:label_no_change_option), :value => '') +
+                               content_tag('option', t(:label_none), :value => 'none') +
+                               options_from_collection_for_select(deliverables, :id, :subject))
+
+      return content_tag(:p, content_tag(:label, t(:field_deliverable)) + select)
     else
       return ''
     end
