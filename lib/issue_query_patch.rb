@@ -9,14 +9,31 @@ module IssueQueryPatch
 
     # Same as typing in the class
     base.class_eval do
-      base.add_available_column(QueryColumn.new(:deliverable_subject, :sortable => "#{Deliverable.table_name}.subject"))
+      base.add_available_column(
+        QueryColumn.new(
+          :deliverable_subject,
+          sortable: "#{Deliverable.table_name}.subject",
+          groupable: "#{Deliverable.table_name}.subject"
+        )
+      )
 
       alias_method_chain :initialize_available_filters, :deliverable
+      alias_method_chain :joins_for_order_statement, :hack
     end
 
   end
 
   module InstanceMethods
+
+    def joins_for_order_statement_with_hack(order_options)
+      joins = []
+      joins << joins_for_order_statement_without_hack(order_options)
+
+      # Beetlejuice, Beetlejuice, Beetlejuice!
+      joins << "LEFT OUTER JOIN #{Deliverable.table_name} ON issues.deliverable_id = deliverables.id"
+
+      joins.any? ? joins.join(' ') : nil
+    end
 
     # Wrapper around the +initialize_available_filters+ to add a new Deliverable filter
     def initialize_available_filters_with_deliverable
