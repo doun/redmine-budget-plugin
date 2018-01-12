@@ -29,8 +29,9 @@ module IssueQueryPatch
       joins = []
       joins << joins_for_order_statement_without_deliverable_hack(order_options)
 
-      # Beetlejuice, Beetlejuice, Beetlejuice!
-      joins << "LEFT OUTER JOIN #{Deliverable.table_name} ON issues.deliverable_id = deliverables.id"
+      if self.group_by == "deliverable_subject"
+        joins << "LEFT OUTER JOIN #{Deliverable.table_name} ON issues.deliverable_id = deliverables.id"
+      end
 
       joins.any? ? joins.join(' ') : nil
     end
