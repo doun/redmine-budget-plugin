@@ -1,4 +1,4 @@
-class AddProjectIdToDeliverables < ActiveRecord::Migration
+class AddProjectIdToDeliverables < ActiveRecord::Migration[4.2]
   def self.up
     add_column :deliverables, :project_id, :integer
   end

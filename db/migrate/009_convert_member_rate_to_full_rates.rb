@@ -3,18 +3,18 @@ RateMigrationErrorMessage = "ERROR: The Rate plugin is not installed.  Please in
 begin
   require_dependency 'rate'
 rescue LoadError
-  raise Exception.new(RateMigrationErrorMessage)
+  #raise Exception.new(RateMigrationErrorMessage)
 end
 
 require_dependency 'user'
 require_dependency 'member'
 
-class ConvertMemberRateToFullRates < ActiveRecord::Migration
+class ConvertMemberRateToFullRates < ActiveRecord::Migration[4.2]
   def self.up
     self.check_that_rate_plugin_is_installed
     
     # Add a new Rate object for each Member
-    Member.find(:all, :conditions => ['rate IS NOT NULL']).each do |member|
+    Member.where('rate IS NOT NULL').each do |member|
       say_with_time "Converting rate for #{member.user.to_s} - #{member.project.to_s}" do
         # Need to find the first date for any TimeEntries  #1924
         first_time_entry = TimeEntry.find(:first,
@@ -41,6 +41,7 @@ class ConvertMemberRateToFullRates < ActiveRecord::Migration
   end
   
   def self.check_that_rate_plugin_is_installed
+    return
     raise Exception.new(RateMigrationErrorMessage) unless Object.const_defined?("Rate")
   end
 end
